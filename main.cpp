@@ -1,21 +1,22 @@
 #include <iostream>
+#include <map>
 #include <fstream>
 #include "main.h"
 
-const int BOARD_SIZE = 81;
-const int BLOCK_SIZE = 3;
-const int ROW_SIZE = 9;
+const int DIM = 3;
+const int BLOCK_COUNT = DIM * DIM;
+const int CELL_COUNT = DIM * DIM * DIM * DIM;
 
 struct block{
-    cell *cells[ROW_SIZE];
+    cell *cells[BLOCK_COUNT];
 };
 
 struct column{
-    cell *cells[ROW_SIZE];
+    cell *cells[BLOCK_COUNT];
 };
 
 struct row{
-    cell *cells[ROW_SIZE];
+    cell *cells[BLOCK_COUNT];
 };
 
 struct cell{
@@ -26,11 +27,47 @@ struct cell{
 };
 
 struct board{
-    cell cells[BOARD_SIZE];
-    block blocks[BLOCK_SIZE];
-    row rows[ROW_SIZE];
-    column cols[ROW_SIZE];
+    cell cells[CELL_COUNT];
+    block blocks[BLOCK_COUNT];
+    row rows[BLOCK_COUNT];
+    column cols[BLOCK_COUNT];
 };
+
+// Verifies a block's solution
+bool verifySequence(cell *cells){
+    std::cout << std::endl << std::endl;
+    std::map<int, int> numberMap;
+    numberMap[0] = 1;
+    int mapIndex;
+
+    for (int i = 0; i < BLOCK_COUNT; i++){
+        mapIndex = cells[i].val;
+        numberMap[mapIndex]++;
+        std::cout << mapIndex << std::endl;
+
+        if (numberMap[mapIndex] > 1)
+            return false;
+    }
+
+    return true;
+}
+
+bool verifySolution(board board){
+    for (block blk : board.blocks){
+        if (!verifySequence(*blk.cells))
+            return false;
+    }
+//    for (row row : board.rows){
+//        if (!verifySequence(*row.cells))
+//            return false;
+//    }
+//    for (column col : board.cols){
+//        if (!verifySequence(*col.cells))
+//            return false;
+//    }
+
+    return true;
+}
 
 board generateBoard(std::string fileName){
     // read file
@@ -44,21 +81,21 @@ board generateBoard(std::string fileName){
     }
 
     int n;
-    for (int i = 0; inFile >> n; i++){
+    for (int i = 0; inFile >> n; i++) {
         board.cells[i].val = n;
     }
 
     // Fill , columns and blocks
-    for (int i = 0, row = 0; row < ROW_SIZE; row++){
-        for (int j = 0; j < ROW_SIZE; j++, i++){
-            int blockRow = row / BLOCK_SIZE;
-            int blockIndex = j / BLOCK_SIZE + blockRow * BLOCK_SIZE;
-            int cellIndex = (row % BLOCK_SIZE) * BLOCK_SIZE + j % BLOCK_SIZE;
+    for (int i = 0, row = 0; row < BLOCK_COUNT; row++){
+        for (int j = 0; j < BLOCK_COUNT; j++, i++){
+            int blockRow = row / DIM;
+            int blockIndex = j / DIM + blockRow * DIM;
+            int cellIndex = (row % DIM) * DIM + j % DIM;
             board.blocks[blockIndex].cells[cellIndex] = &board.cells[i];
+            board.cells[i].block = board.blocks[blockIndex];
             board.rows[row].cells[j] = &board.cells[i];
             board.cells[i].row = board.rows[row];
             board.cols[j].cells[row] = &board.cells[i];
-            board.cells[i].block = board.blocks[blockIndex];
             board.cells[i].col = board.cols[j];
         }
     }
@@ -67,19 +104,25 @@ board generateBoard(std::string fileName){
 }
 
 int main() {
-    std::string sudokuPath = "sudokus/s01a.txt";
+
+    std::string sudokuPath = "sudokus/solvedTest.txt";
     board board = generateBoard(sudokuPath);
+    int runningTime = 0;
 
-    for (int i = 0, n = 0; i < BOARD_SIZE; i++, n++){
-        if (n > 8){
-            std::cout << std::endl;
-            n = 0;
+    for (row row : board.rows){
+        std::cout << std::endl;
+        for (int i = 0; i < BLOCK_COUNT; i++){
+            std::cout << row.cells[i]->val << "  ";
         }
-
-        std::cout << board.cells[i].val << "  ";
     }
 
-    // Populate board
+    std::cout << "Board is solved: " << verifySolution(board) << std::endl;
+
+//
+//    while (!verifySolution(board)){
+//
+//        runningTime++;
+//    }
 
     return 0;
 }
