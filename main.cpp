@@ -33,20 +33,30 @@ struct board{
     column cols[BLOCK_COUNT];
 };
 
+void printBlock(block blk){
+    std::cout << "---" << std::endl;
+    for (int i = 0; i < DIM; i++){
+        for (int j = 0; j < DIM; j++){
+            std::cout << blk.cells[i * DIM + j]->val << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
 // Verifies a block's solution
-bool verifySequence(cell *cells){
-    std::cout << std::endl << std::endl;
+bool verifySequence(cell *cells[DIM]){
     std::map<int, int> numberMap;
     numberMap[0] = 1;
     int mapIndex;
 
     for (int i = 0; i < BLOCK_COUNT; i++){
-        mapIndex = cells[i].val;
+        mapIndex = cells[i]->val;
         numberMap[mapIndex]++;
-        std::cout << mapIndex << std::endl;
 
-        if (numberMap[mapIndex] > 1)
+        if (numberMap[mapIndex] > 1){
+            std::cout << "Duplicate value: " << mapIndex << std::endl;
             return false;
+        }
     }
 
     return true;
@@ -54,17 +64,20 @@ bool verifySequence(cell *cells){
 
 bool verifySolution(board board){
     for (block blk : board.blocks){
-        if (!verifySequence(*blk.cells))
+        if (!verifySequence(blk.cells)){
+            std::cout << "-FAIL-" << std::endl;
+            printBlock(blk);
+            return false;
+        }
+    }
+    for (row row : board.rows){
+        if (!verifySequence(row.cells))
             return false;
     }
-//    for (row row : board.rows){
-//        if (!verifySequence(*row.cells))
-//            return false;
-//    }
-//    for (column col : board.cols){
-//        if (!verifySequence(*col.cells))
-//            return false;
-//    }
+    for (column col : board.cols){
+        if (!verifySequence(col.cells))
+            return false;
+    }
 
     return true;
 }
@@ -89,8 +102,8 @@ board generateBoard(std::string fileName){
     for (int i = 0, row = 0; row < BLOCK_COUNT; row++){
         for (int j = 0; j < BLOCK_COUNT; j++, i++){
             int blockRow = row / DIM;
-            int blockIndex = j / DIM + blockRow * DIM;
-            int cellIndex = (row % DIM) * DIM + j % DIM;
+            int blockIndex = (j / DIM) + (blockRow * DIM);
+            int cellIndex = ((row % DIM) * DIM) + (j % DIM);
             board.blocks[blockIndex].cells[cellIndex] = &board.cells[i];
             board.cells[i].block = board.blocks[blockIndex];
             board.rows[row].cells[j] = &board.cells[i];
@@ -101,6 +114,14 @@ board generateBoard(std::string fileName){
     }
 
     return board;
+}
+
+void solveBoard(board *board){
+    for (int i= 0 ; i < CELL_COUNT; i++){
+        // see if cell needs a value
+        if (board->cells[i].val == 0){
+        }
+    }
 }
 
 int main() {
@@ -116,7 +137,9 @@ int main() {
         }
     }
 
-    std::cout << "Board is solved: " << verifySolution(board) << std::endl;
+    std::cout << std::endl << std::endl;
+    solveBoard(&board);
+    std::cout << "Board solved: " << verifySolution(board) << std::endl;
 
 //
 //    while (!verifySolution(board)){
