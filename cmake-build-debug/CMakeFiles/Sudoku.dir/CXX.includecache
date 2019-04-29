@@ -6,15 +6,41 @@
 
 #IncludeRegexTransform: 
 
-E:/C++Projects/Sudoku/main.cpp
+C:/Users/jeffm/Documents/Github/Sudoku/exactCover.cpp
 iostream
 -
 map
 -
 fstream
 -
-main.h
-E:/C++Projects/Sudoku/main.h
+vector
+-
+exactCover.h
+C:/Users/jeffm/Documents/Github/Sudoku/exactCover.h
 
-E:/C++Projects/Sudoku/main.h
+C:/Users/jeffm/Documents/Github/Sudoku/exactCover.h
+
+C:/Users/jeffm/Documents/Github/Sudoku/sudoku.cpp
+iostream
+-
+fstream
+-
+map
+-
+vector
+-
+cmath
+-
+errno.h
+-
+stdio.h
+-
+string.h
+-
+sudoku.h
+C:/Users/jeffm/Documents/Github/Sudoku/sudoku.h
+exactCover.h
+C:/Users/jeffm/Documents/Github/Sudoku/exactCover.h
+
+C:/Users/jeffm/Documents/Github/Sudoku/sudoku.h
 

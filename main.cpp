@@ -1,151 +1,39 @@
 #include <iostream>
 #include <map>
 #include <fstream>
-#include "main.h"
+#include <vector>
+#include <windows.h>
+#include <vector>
+#include <string>
+#include <regex>
+#include "sudoku.h"
 
-const int DIM = 3;
-const int BLOCK_COUNT = DIM * DIM;
-const int CELL_COUNT = DIM * DIM * DIM * DIM;
-
-struct block{
-    cell *cells[BLOCK_COUNT];
-};
-
-struct column{
-    cell *cells[BLOCK_COUNT];
-};
-
-struct row{
-    cell *cells[BLOCK_COUNT];
-};
-
-struct cell{
-    int val = 0;
-    block block;
-    column col;
-    row row;
-};
-
-struct board{
-    cell cells[CELL_COUNT];
-    block blocks[BLOCK_COUNT];
-    row rows[BLOCK_COUNT];
-    column cols[BLOCK_COUNT];
-};
-
-void printBlock(block blk){
-    std::cout << "---" << std::endl;
-    for (int i = 0; i < DIM; i++){
-        for (int j = 0; j < DIM; j++){
-            std::cout << blk.cells[i * DIM + j]->val << " ";
-        }
-        std::cout << std::endl;
-    }
-}
-
-// Verifies a block's solution
-bool verifySequence(cell *cells[DIM]){
-    std::map<int, int> numberMap;
-    numberMap[0] = 1;
-    int mapIndex;
-
-    for (int i = 0; i < BLOCK_COUNT; i++){
-        mapIndex = cells[i]->val;
-        numberMap[mapIndex]++;
-
-        if (numberMap[mapIndex] > 1){
-            std::cout << "Duplicate value: " << mapIndex << std::endl;
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool verifySolution(board board){
-    for (block blk : board.blocks){
-        if (!verifySequence(blk.cells)){
-            std::cout << "-FAIL-" << std::endl;
-            printBlock(blk);
-            return false;
-        }
-    }
-    for (row row : board.rows){
-        if (!verifySequence(row.cells))
-            return false;
-    }
-    for (column col : board.cols){
-        if (!verifySequence(col.cells))
-            return false;
-    }
-
-    return true;
-}
-
-board generateBoard(std::string fileName){
-    // read file
-    std::ifstream inFile;
-    inFile.open(fileName);
-    board board;
-
-    if (!inFile){
-        std::cout << "Cannot open file" << std::endl;
-        exit(1);
-    }
-
-    int n;
-    for (int i = 0; inFile >> n; i++) {
-        board.cells[i].val = n;
-    }
-
-    // Fill , columns and blocks
-    for (int i = 0, row = 0; row < BLOCK_COUNT; row++){
-        for (int j = 0; j < BLOCK_COUNT; j++, i++){
-            int blockRow = row / DIM;
-            int blockIndex = (j / DIM) + (blockRow * DIM);
-            int cellIndex = ((row % DIM) * DIM) + (j % DIM);
-            board.blocks[blockIndex].cells[cellIndex] = &board.cells[i];
-            board.cells[i].block = board.blocks[blockIndex];
-            board.rows[row].cells[j] = &board.cells[i];
-            board.cells[i].row = board.rows[row];
-            board.cols[j].cells[row] = &board.cells[i];
-            board.cells[i].col = board.cols[j];
-        }
-    }
-
-    return board;
-}
-
-void solveBoard(board *board){
-    for (int i= 0 ; i < CELL_COUNT; i++){
-        // see if cell needs a value
-        if (board->cells[i].val == 0){
-        }
+void read_directory(const std::string& name, std::vector<std::string>& v)
+{
+    std::string pattern(name);
+    pattern.append("\\*");
+    WIN32_FIND_DATA data;
+    HANDLE hFind;
+    if ((hFind = FindFirstFile(pattern.c_str(), &data)) != INVALID_HANDLE_VALUE) {
+        do {
+            v.emplace_back(data.cFileName);
+        } while (FindNextFile(hFind, &data) != 0);
+        FindClose(hFind);
     }
 }
 
 int main() {
+    std::vector<std::string> files;
+    std::string dir = "sudokus/";
+    read_directory(dir, files);
 
-    std::string sudokuPath = "sudokus/solvedTest.txt";
-    board board = generateBoard(sudokuPath);
-    int runningTime = 0;
-
-    for (row row : board.rows){
-        std::cout << std::endl;
-        for (int i = 0; i < BLOCK_COUNT; i++){
-            std::cout << row.cells[i]->val << "  ";
+    for (const std::string &file : files){
+        if (std::regex_match (file, std::regex("(.*)([.]txt)"))){
+            std::cout << file << ": ";
+            std::string path = dir + file;
+            sudoku::solve(&path);
         }
     }
-
-    std::cout << std::endl << std::endl;
-    solveBoard(&board);
-    std::cout << "Board solved: " << verifySolution(board) << std::endl;
-
-//
-//    while (!verifySolution(board)){
-//
-//        runningTime++;
-//    }
 
     return 0;
 }

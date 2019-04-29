@@ -1,5 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/Sudoku.dir/main.cpp.obj"
+  "CMakeFiles/Sudoku.dir/exactCover.cpp.obj"
+  "CMakeFiles/Sudoku.dir/sudoku.cpp.obj"
   "Sudoku.pdb"
   "Sudoku.exe"
   "Sudoku.exe.manifest"
