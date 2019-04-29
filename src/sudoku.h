@@ -20,6 +20,10 @@ private:
     static std::vector<int> getBoard(const std::string&);
     static ConvertedBoard convertToExactCover(std::vector<int> board);
 public:
+    static void printBoard(const std::vector<int>&);
+    static bool solve(const std::string&);
+    static bool solve(const std::vector<int>&);
+    static bool solve(const std::vector<int>&, std::vector<int>&);
     static bool solve(const std::string&, std::vector<int>&);
     static bool verifySolution(std::vector<int>&, int);
 };

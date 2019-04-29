@@ -121,8 +121,35 @@ sudoku::ConvertedBoard sudoku::convertToExactCover(std::vector<int> board){
     return cb;
 }
 
-bool sudoku::solve(const std::string &fileName, std::vector<int> &solution) {
-    std::vector<int> board = getBoard(fileName);
+void sudoku::printBoard(const std::vector<int> &board){
+    int dim = std::sqrt(board.size());
+
+    for (int i = 0; i < dim; i++){
+        for (int j = 0; j < dim; j++){
+            std::cout << board[i * dim + j] << " ";
+        }
+
+        std::cout << std::endl;
+    }
+}
+
+bool sudoku::solve(const std::string &fileName){
+    solve(getBoard(fileName));
+}
+
+bool sudoku::solve(const std::vector<int> &board){
+    std::vector<int> solution;
+
+    bool valid = solve(board, solution);
+
+    if (valid) {
+        printBoard(solution);
+    } else {
+        std::cout << "No solution" << std::endl;
+    }
+}
+
+bool sudoku::solve(const std::vector<int> &board, std::vector<int> &solution){
     ConvertedBoard cb = convertToExactCover(board);
     exactCover ec(cb.ecBoard);
 
@@ -137,16 +164,14 @@ bool sudoku::solve(const std::string &fileName, std::vector<int> &solution) {
             solution[c.row * dim + c.col] = c.val;
         }
 
-        if (verifySolution(solution, dim)){
-            //std::cout << "Valid solution!" << std::endl;
-            return true;
-        } else {
-            //std::cout << "Invalid solution" << std::endl;
-            return false;
-        }
+        return verifySolution(solution, dim);
     }
     else {
-        //std::cout << "No solution found" << std::endl;
         return false;
     }
+}
+
+bool sudoku::solve(const std::string &fileName, std::vector<int> &solution) {
+    std::vector<int> board = getBoard(fileName);
+    return solve(board, solution);
 }

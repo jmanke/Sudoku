@@ -23,6 +23,10 @@ void read_directory(const std::string& name, std::vector<std::string>& v)
     }
 }
 
+void writeSolution(const std::string &fileName, const std::string &sol){
+
+}
+
 int main() {
     std::vector<std::string> files;
     std::string dir = "sudokus/";
@@ -37,17 +41,15 @@ int main() {
 
             if (sudoku::solve(path, sol)){
                 std::cout << "Solution found: " << std::endl << std::endl;
-                int dim = (int)std::sqrt(sol.size());
-
-                for (int i = 0; i < dim; i++){
-                    for (int j = 0; j < dim; j++){
-                        solStr.append(std::to_string(sol[i * dim + j])).append(" ");
-                    }
-
-                    solStr.append("\n");
-                }
-
-                std::cout << solStr << std::endl;
+                //int dim = (int)std::sqrt(sol.size());
+                sudoku::printBoard(sol);
+//                for (int i = 0; i < dim; i++){
+//                    for (int j = 0; j < dim; j++){
+//                        solStr.append(std::to_string(sol[i * dim + j])).append(" ");
+//                    }
+//
+//                    solStr.append("\n");
+//                }
             }
         }
     }
