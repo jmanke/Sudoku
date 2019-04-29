@@ -17,11 +17,11 @@ private:
         std::map<int, Cell> solutionMap;
     };
 
-    static std::vector<int> getBoard(const std::string*);
+    static std::vector<int> getBoard(const std::string&);
     static ConvertedBoard convertToExactCover(std::vector<int> board);
 public:
-    static void solve(const std::string*);
-    static bool verifySolution(int[], int);
+    static bool solve(const std::string&, std::vector<int>&);
+    static bool verifySolution(std::vector<int>&, int);
 };
 
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 #include <fstream>
+#include <cmath>
 #include <vector>
 #include <windows.h>
 #include <vector>
@@ -29,9 +30,25 @@ int main() {
 
     for (const std::string &file : files){
         if (std::regex_match (file, std::regex("(.*)([.]txt)"))){
-            std::cout << file << ": ";
+            std::cout << std::endl << file << ": ";
             std::string path = dir + file;
-            sudoku::solve(&path);
+            std::vector<int> sol;
+            std::string solStr;
+
+            if (sudoku::solve(path, sol)){
+                std::cout << "Solution found: " << std::endl << std::endl;
+                int dim = (int)std::sqrt(sol.size());
+
+                for (int i = 0; i < dim; i++){
+                    for (int j = 0; j < dim; j++){
+                        solStr.append(std::to_string(sol[i * dim + j])).append(" ");
+                    }
+
+                    solStr.append("\n");
+                }
+
+                std::cout << solStr << std::endl;
+            }
         }
     }
 

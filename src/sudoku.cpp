@@ -9,7 +9,7 @@
 #include "sudoku.h"
 #include "exactCover.h"
 
-bool sudoku::verifySolution(int board[], int dim){
+bool sudoku::verifySolution(std::vector<int> &board, int dim){
     int rd = (int)std::sqrt(dim);
     // verify rows and columns
     for (int i = 0; i < dim; i++){
@@ -29,10 +29,10 @@ bool sudoku::verifySolution(int board[], int dim){
     return true;
 }
 
-std::vector<int> sudoku::getBoard(const std::string *fileName){
+std::vector<int> sudoku::getBoard(const std::string &fileName){
     // read file
     std::ifstream inFile;
-    inFile.open(*fileName);
+    inFile.open(fileName);
     std::vector<int> board;
 
     if (!inFile){
@@ -121,14 +121,16 @@ sudoku::ConvertedBoard sudoku::convertToExactCover(std::vector<int> board){
     return cb;
 }
 
-void sudoku::solve(const std::string *fileName) {
+bool sudoku::solve(const std::string &fileName, std::vector<int> &solution) {
     std::vector<int> board = getBoard(fileName);
     ConvertedBoard cb = convertToExactCover(board);
     exactCover ec(cb.ecBoard);
 
     if (ec.solve()){
         int dim = (int)std::sqrt(board.size());
-        int solution[dim * dim];
+        //int solution[dim * dim];
+        solution.clear();
+        solution.resize(dim * dim);
 
         for (int i : ec.getSolution()) {
             Cell c = cb.solutionMap[i];
@@ -136,12 +138,15 @@ void sudoku::solve(const std::string *fileName) {
         }
 
         if (verifySolution(solution, dim)){
-            std::cout << "Valid solution!" << std::endl;
+            //std::cout << "Valid solution!" << std::endl;
+            return true;
         } else {
-            std::cout << "Invalid solution" << std::endl;
+            //std::cout << "Invalid solution" << std::endl;
+            return false;
         }
     }
     else {
-        std::cout << "No solution found" << std::endl;
+        //std::cout << "No solution found" << std::endl;
+        return false;
     }
 }
