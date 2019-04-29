@@ -134,7 +134,7 @@ void sudoku::printBoard(const std::vector<int> &board){
 }
 
 bool sudoku::solve(const std::string &fileName){
-    solve(getBoard(fileName));
+    return solve(getBoard(fileName));
 }
 
 bool sudoku::solve(const std::vector<int> &board){
@@ -147,6 +147,8 @@ bool sudoku::solve(const std::vector<int> &board){
     } else {
         std::cout << "No solution" << std::endl;
     }
+
+    return valid;
 }
 
 bool sudoku::solve(const std::vector<int> &board, std::vector<int> &solution){
@@ -155,7 +157,6 @@ bool sudoku::solve(const std::vector<int> &board, std::vector<int> &solution){
 
     if (ec.solve()){
         int dim = (int)std::sqrt(board.size());
-        //int solution[dim * dim];
         solution.clear();
         solution.resize(dim * dim);
 
