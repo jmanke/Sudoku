@@ -46,6 +46,8 @@ std::vector<int> sudoku::getBoard(const std::string &fileName){
         board.push_back(n);
     }
 
+    inFile.close();
+
     return board;
 }
 

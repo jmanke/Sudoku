@@ -107,14 +107,14 @@ std::vector<int> exactCover::getSolution() {
     return solution;
 }
 
-void exactCover::cover(Node *node){
-    Node *col = node->column;
+void exactCover::cover(Node &node){
+    Node *col = node.column;
 
     col->left->right = col->right;
     col->right->left = col->left;
 
-    for (exactCover::Node *r = col->down; r != col; r = r->down){
-        for (exactCover::Node *p = r->right; p != r; p = p->right){
+    for (Node *r = col->down; r != col; r = r->down){
+        for (Node *p = r->right; p != r; p = p->right){
             p->up->down = p->down;
             p->down->up = p->up;
             p->column->nodeCount--;
@@ -122,8 +122,8 @@ void exactCover::cover(Node *node){
     }
 }
 
-void exactCover::uncover(Node *node){
-    Node *col = node->column;
+void exactCover::uncover(Node &node){
+    Node *col = node.column;
 
     for (exactCover::Node *r = col->up; r != col; r = r->up){
         for (exactCover::Node *p = r->left; p != r; p = p->left){
@@ -166,14 +166,14 @@ bool exactCover::solveMatrix(){
             }
 
             for (Node *p : removeCol){
-                cover(p);
+                cover(*p);
             }
 
             if (solveMatrix()){
                 return true;
             } else {
                 for (Node *p : removeCol){
-                    uncover(p);
+                    uncover(*p);
                 }
                 exactCover::solution.pop_back();
             }

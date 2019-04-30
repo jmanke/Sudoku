@@ -30,8 +30,8 @@ private:
     int upIndex(int);
     int downIndex(int);
     bool validCell(int, int);
-    void cover(Node*);
-    void uncover(Node*);
+    void cover(Node&);
+    void uncover(Node&);
     bool solveMatrix();
     Node* getMinCol();
 public:
