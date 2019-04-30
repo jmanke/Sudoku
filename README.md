@@ -1,5 +1,5 @@
 # Sudoku
-c++ implementation of a Sudoku solver using exact cover. Solves 2x2, 4x4, 9x9, 16x16, 25x25 sudokus
+c++ implementation of a Sudoku solver using exact cover. Solves 4x4, 9x9, 16x16, 25x25 sudokus
 
 HOW TO USE:
 - Run Sudoku.exe. The following argsuments can be passed in:
