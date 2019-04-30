@@ -156,9 +156,9 @@ bool sudoku::solve(const std::vector<int> &board){
 bool sudoku::solve(const std::vector<int> &board, std::vector<int> &solution){
     ConvertedBoard cb = convertToExactCover(board);
     exactCover ec(cb.ecBoard);
+    int dim = (int)std::sqrt(board.size());
 
     if (ec.solve()){
-        int dim = (int)std::sqrt(board.size());
         solution.clear();
         solution.resize(dim * dim);
 

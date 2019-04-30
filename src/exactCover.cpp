@@ -157,27 +157,25 @@ bool exactCover::solveMatrix(){
         if (minCol->nodeCount == 0)
             return false;
 
+        cover(*minCol);
+
         for (Node *n = minCol->down; n != minCol; n = n->down){
-            std::vector<Node*> removeCol = {n};
             exactCover::solution.push_back(n->rowId);
 
             for (Node *p = n->right; p != n; p = p->right){
-                removeCol.push_back(p);
-            }
-
-            for (Node *p : removeCol){
                 cover(*p);
             }
 
             if (solveMatrix()){
                 return true;
             } else {
-                for (Node *p : removeCol){
+                for (Node *p = n->left; p != n; p = p->left){
                     uncover(*p);
                 }
                 exactCover::solution.pop_back();
             }
         }
+        uncover(*minCol);
 
         return false;
     }
