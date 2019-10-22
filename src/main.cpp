@@ -47,20 +47,15 @@ std::vector<std::string> getFilesWithExtension(const std::string &dir, const std
 
 std::vector<std::string> getSudokuFiles(int argc, char **args) {
 	std::vector<std::string> sudokuFiles;
-	switch (argc) {
-	case 1:
+	if (argc == 1) {
 		sudokuFiles = getFilesWithExtension(SUDOKU_DIR, "txt");
 		std::transform(sudokuFiles.begin(), sudokuFiles.end(), sudokuFiles.begin(), [](std::string file) { return SUDOKU_DIR + file; });
-		break;
-	case 2:
-		sudokuFiles = {args[1]};
-		break;
-	case 3:
+	}
+	else if (argc == 2 || argc == 3) {
 		sudokuFiles = { args[1] };
-		break;
-	default:
-		std::cerr << "Invalid arguments" << std::endl;
-		break;
+	} 
+	else {
+		std::cout << "Invalid arguments" << std::endl;
 	}
 
 	return sudokuFiles;
