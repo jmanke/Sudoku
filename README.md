@@ -11,9 +11,9 @@ The program is mainly split into two files, sudoku.cpp and exactCover.cpp.  sudo
 - Run Sudoku.exe. The following argsuments can be passed in:
   1. Sudoku.exe
     - No arguments, solves each sudoku .txt file in the sudokus directory.  Prints solutions to standard output.
-  2. Sudoku.exe -inputFile 
+  2. Sudoku.exe inputFile 
     - Specifies a sudoku .txt file to solve.  Prints solution to standard output.
-  3. Sudoku.exe -inputFile -outputFile
+  3. Sudoku.exe inputFile outputFile
     - Specifies a sudoku .txt file to solve, and prints solution to specified output file.
 
 
